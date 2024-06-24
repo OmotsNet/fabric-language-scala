@@ -16,7 +16,6 @@
 
 package io.omots.language.scala
 
-import net.fabricmc.language.scala.ScalaLanguageAdapter.logger
 import net.fabricmc.loader.api.{LanguageAdapter, ModContainer}
 import org.slf4j.LoggerFactory
 import scala.util.{Failure, Success, Try}
@@ -36,7 +35,7 @@ class ScalaLanguageAdapter extends LanguageAdapter :
             Option(instance).getOrElse(throw new NullPointerException)
         match
             case Success(instance) => return instance
-            case _                 => logger.warn(
+            case _                 => ScalaLanguageAdapter.logger.warn(
                 s"Unable to find $value.MODULE$$. Maybe it isn't a Scala object?"
             )
 
@@ -45,7 +44,7 @@ class ScalaLanguageAdapter extends LanguageAdapter :
             case Success(value)     => value
             case Failure(exception) => throw LanguageAdapterException(exception)
 
-object ScalaLanguageAdapter:
+private object ScalaLanguageAdapter:
     private lazy val logger = LoggerFactory.getLogger("ScalaLanguageAdapter")
 
 end ScalaLanguageAdapter
