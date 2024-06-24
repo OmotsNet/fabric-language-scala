@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package net.fabricmc.language.scala
+package io.omots.language.scala
 
 import net.fabricmc.api.ModInitializer
 import net.minecraft.block.Blocks
 
-object TestMod extends ModInitializer {
-    override def onInitialize(): Unit = {
+object TestMod extends ModInitializer:
+    override def onInitialize(): Unit =
         val message = s"""
 				|**********************
 				|Hello from Scala!
@@ -28,5 +28,4 @@ object TestMod extends ModInitializer {
 				|**********************
 				|""".stripMargin
         println(message)
-    }
-}
+

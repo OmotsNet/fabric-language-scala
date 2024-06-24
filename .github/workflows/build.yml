@@ -4,7 +4,7 @@ jobs:
   build:
     strategy:
       matrix:
-        java: [17-jdk]
+        java: [21-jdk]
     runs-on: ubuntu-20.04
     container:
       image: openjdk:${{ matrix.java }}

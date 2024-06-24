@@ -2,15 +2,28 @@ plugins {
 	id 'java-library'
 	id 'scala'
 	id 'maven-publish'
-	id 'fabric-loom' version '1.5-SNAPSHOT'
+	id 'fabric-loom' version '1.7-SNAPSHOT'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-archivesBaseName = project.archives_base_name
 group = project.maven_group
-
 version = mod_version + "+scala." + project.scala_version + (System.getenv('GITHUB_ACTIONS') ? "" : ".local")
+
+def ENV = System.getenv()
+
+base {
+	archivesName = project.archives_base_name
+}
+
+configurations {
+	includeAndExpose
+
+	modApi {
+		extendsFrom includeAndExpose
+	}
+	include {
+		extendsFrom includeAndExpose
+	}
+}
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -18,9 +31,9 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Scala Dependencies
-	api(include("org.scala-lang:scala3-library_3:${project.scala_version}"))
+	includeAndExpose "org.scala-lang:scala3-library_3:${project.scala_version}"
 	// Dependent by Scala3
-	api(include("org.scala-lang:scala-library:2.13.12"))
+	includeAndExpose "org.scala-lang:scala-library:2.13.14"
 }
 
 processResources {
@@ -31,27 +44,40 @@ processResources {
 	}
 }
 
-java {
-	withSourcesJar()
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = project.group
-            artifactId = project.name.toLowerCase()
-            version = project.version
+java {
+	withSourcesJar()
 
-            from components.java
-        }
-    }
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(ScalaCompile).configureEach {
+	scalaCompileOptions.additionalParameters = ["-new-syntax", "-deprecation"]
+}
+
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			groupId = project.group
+			artifactId = project.name.toLowerCase()
+			version = project.version
+
+			from components.java
+		}
+	}
+
 	repositories {
-		if (System.getenv('MAVEN_URL')) {
+		if (ENV.MAVEN_URL) {
 			maven {
-				url System.getenv('MAVEN_URL')
+				url ENV.MAVEN_URL
 				credentials {
-					username System.getenv('MAVEN_USERNAME')
-					password System.getenv('MAVEN_PASSWORD')
+					username ENV.MAVEN_USERNAME
+					password ENV.MAVEN_PASSWORD
 				}
 			}
 		}
@@ -59,11 +85,12 @@ publishing {
 }
 
 // A task to ensure that the version being released has not already been released.
-task checkVersion {
+import groovy.xml.XmlSlurper
+tasks.register('checkVersion') {
 	doFirst {
-		def xml = new URL("https://maven.fabricmc.net/net/fabricmc/fabric-language-scala/maven-metadata.xml").text
+		var xml = URI.create("https://maven.fabricmc.net/net/fabricmc/fabric-language-scala/maven-metadata.xml").toURL().text
 		def metadata = new XmlSlurper().parseText(xml)
-		def versions = metadata.versioning.versions.version*.text();
+		def versions = metadata.versioning.versions.version*.text()
 		if (versions.contains(version)) {
 			throw new RuntimeException("${version} has already been released!")
 		}

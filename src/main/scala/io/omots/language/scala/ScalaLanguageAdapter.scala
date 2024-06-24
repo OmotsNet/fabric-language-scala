@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.fabricmc.language.scala
+package io.omots.language.scala
 
 import net.fabricmc.language.scala.ScalaLanguageAdapter.logger
 import net.fabricmc.loader.api.{LanguageAdapter, ModContainer}
@@ -22,36 +22,31 @@ import org.slf4j.LoggerFactory
 import scala.util.{Failure, Success, Try}
 import net.fabricmc.loader.api.LanguageAdapterException
 
-class ScalaLanguageAdapter extends LanguageAdapter {
-
+class ScalaLanguageAdapter extends LanguageAdapter :
     override def create[T](
         modContainer: ModContainer,
         value: String,
         typ: Class[T]
-    ): T = {
+    ): T =
         // Load Object
-        val tried = Try {
+        Try:
             val objectClass = Class.forName(value + "$")
             val moduleField = objectClass.getField("MODULE$")
             val instance = moduleField.get(null).asInstanceOf[T]
             Option(instance).getOrElse(throw new NullPointerException)
-        }
-
-        tried match
+        match
             case Success(instance) => return instance
-            case _                 =>
-
-        logger.warn(
-          s"Unable to find ${value}.MODULE$$. Maybe it isn't a Scala object?"
-        )
+            case _                 => logger.warn(
+                s"Unable to find $value.MODULE$$. Maybe it isn't a Scala object?"
+            )
 
         // Try constructing Scala class
         Try(typ.getConstructor().newInstance()) match
             case Success(value)     => value
             case Failure(exception) => throw LanguageAdapterException(exception)
-    }
-}
 
-object ScalaLanguageAdapter {
+object ScalaLanguageAdapter:
     private lazy val logger = LoggerFactory.getLogger("ScalaLanguageAdapter")
-}
+
+end ScalaLanguageAdapter
+

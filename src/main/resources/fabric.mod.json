@@ -5,6 +5,6 @@
   "description": "Fabric language module for Scala.",
   "version": "${version}",
   "languageAdapters": {
-    "scala": "net.fabricmc.language.scala.ScalaLanguageAdapter"
+    "scala": "io.omots.language.scala.ScalaLanguageAdapter"
   }
 }
