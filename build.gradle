@@ -106,6 +106,7 @@ publishing {
 
 	repositories {
 		if (ENV.MAVEN_URL) {
+			println("Publish to Maven...")
 			maven {
 				name "GitHubPackages"
 				url ENV.MAVEN_URL
