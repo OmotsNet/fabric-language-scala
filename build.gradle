@@ -87,10 +87,11 @@ publishing {
 	repositories {
 		if (ENV.MAVEN_URL) {
 			maven {
+				name "GitHubPackages"
 				url ENV.MAVEN_URL
 				credentials {
-					username ENV.MAVEN_USERNAME
-					password ENV.MAVEN_PASSWORD
+					username ENV.GITHUB_ACTOR
+					password ENV.GITHUB_TOKEN
 				}
 			}
 		}
