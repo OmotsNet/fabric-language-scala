@@ -16,7 +16,7 @@ jobs:
 #        with:
 #          context: changelog
 #          workflow_id: release.yml
-      - run: ./gradlew build publishMods publish --stacktrace --warning-mode=fail
+      - run: ./gradlew publish --stacktrace --warning-mode=fail
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #      - run: ./gradlew processMDTemplates
