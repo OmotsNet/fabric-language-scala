@@ -13,5 +13,5 @@ jobs:
       - run: ./gradlew checkVersion build publish --stacktrace --warning-mode fail
         env:
           MAVEN_URL: ${{ secrets.MAVEN_URL }}
-          MAVEN_USERNAME: ${{ secrets.GITHUB_ACTOR }}
-          MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_USERNAME: ${{ github.actor }}
+          MAVEN_PASSWORD: ${{ secrets.github_token }}
