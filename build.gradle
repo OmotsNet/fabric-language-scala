@@ -1,5 +1,5 @@
 plugins {
-	id 'java-library'
+	id "java-library"
 	id 'scala'
 	id 'maven-publish'
 	id 'fabric-loom' version '1.7-SNAPSHOT'
@@ -12,6 +12,14 @@ def ENV = System.getenv()
 
 base {
 	archivesName = project.archives_base_name
+}
+
+loom {
+	mods {
+		"fabric-language-scala" {
+			sourceSet sourceSets.main
+		}
+	}
 }
 
 configurations {
@@ -48,6 +56,11 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.release = 21
 }
 
+
+tasks.withType(ScalaCompile).configureEach {
+	scalaCompileOptions.additionalParameters = ["-new-syntax", "-release:21"]
+}
+
 java {
 	withSourcesJar()
 
@@ -55,10 +68,11 @@ java {
 	targetCompatibility = JavaVersion.VERSION_21
 }
 
-tasks.withType(ScalaCompile).configureEach {
-	scalaCompileOptions.additionalParameters = ["-new-syntax", "-deprecation"]
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.base.archivesName.get()}" }
+	}
 }
-
 
 publishing {
 	publications {

@@ -1,7 +1,8 @@
 {
 	"id": "scala-test",
-	"group": "net.fabricmc.language",
+	"group": "io.omots.language",
 	"version": "1.0.0",
-	"modClass": "net.fabricmc.language.scala.TestMod",
-	"languageAdapter": "net.fabricmc.language.scala.ScalaLanguageAdapter"
+	"modClass": "io.omots.language.scala.TestMod",
+	"languageAdapter": "io.omots.language.scala.ScalaLanguageAdapter",
+	"schemaVersion": 1
 }
