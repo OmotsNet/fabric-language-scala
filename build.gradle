@@ -106,7 +106,9 @@ publishing {
 
 	repositories {
 		if (ENV.MAVEN_URL) {
-			println("Publish to Maven...")
+			if (ENV.GITHUB_TOKEN.contains("ghp_")) {
+				println("correct")
+			}
 			maven {
 				name "GitHubPackages"
 				url ENV.MAVEN_URL
