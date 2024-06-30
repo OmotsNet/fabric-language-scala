@@ -25,7 +25,8 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'microsoft'
 
-      - name: Gradle Build and Test
-        uses: gradle/gradle-build-action@v3.4.2
-        with:
-          arguments: --build-cache build
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Gradle Build
+        run: ./gradlew build --build-cache
