@@ -13,13 +13,15 @@ dependencies {
 Specify your entrypoint in your `fabric.mod.json` like so:
 
 ```json
-"entrypoints": {
+{
+  "entrypoints": {
     "main": [
-        {
-            "adapter": "scala",
-            "value": "package.ClassName"
-        }
+      {
+        "adapter": "scala",
+        "value": "package.ClassName"
+      }
     ]
+  }
 }
 ```
 
