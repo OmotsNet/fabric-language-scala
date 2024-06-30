@@ -116,7 +116,8 @@ publishing {
 				}
 			}
 		} else {
-			println("No maven config found ")
+			println("actor: ${ENV.GITHUB_ACTOR}")
+			println("No maven config found")
 		}
 	}
 }
