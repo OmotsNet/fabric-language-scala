@@ -115,6 +115,8 @@ publishing {
 					password ENV.GITHUB_TOKEN
 				}
 			}
+		} else {
+			println("No maven config found ")
 		}
 	}
 }
